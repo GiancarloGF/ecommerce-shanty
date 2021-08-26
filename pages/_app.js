@@ -1,5 +1,7 @@
-import '../styles/globals.css'
-import {useEffect} from 'react'
+import { useEffect } from 'react';
+import '../styles/globals.css';
+import { StoreProvider } from '../utils/Store';
+
 function MyApp({ Component, pageProps }) {
   useEffect(()=>{
     //Fixing issue when render style (1)
@@ -7,12 +9,16 @@ function MyApp({ Component, pageProps }) {
     if(jssStyles){
       jssStyles.parentElement.removeChild(jssStyles);
     }
-  },[])
+  },[]);
 
-  return <Component {...pageProps} />
+  return (
+    <StoreProvider>
+      <Component {...pageProps} />
+    </StoreProvider>
+  );
 }
 
-export default MyApp
+export default MyApp;
 
 
 

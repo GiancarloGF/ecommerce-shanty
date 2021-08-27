@@ -31,6 +31,7 @@ export default function Shipping() {
     if (!userInfo) {
       router.push("/login?redirect=/shipping");
     }
+    
     setValue("fullName", shippingAddress.fullName);
     setValue("address", shippingAddress.address);
     setValue("city", shippingAddress.city);
@@ -44,13 +45,14 @@ export default function Shipping() {
       type: "SAVE_SHIPPING_ADDRESS",
       payload: { fullName, address, city, postalCode, country },
     });
-    Cookies.set("shippingAddress", {
+    Cookies.set("shippingAddress", JSON.stringify({
       fullName,
       address,
       city,
       postalCode,
       country,
-    });
+    }));
+    
     router.push("/payment");
   };
   return (

@@ -48,7 +48,7 @@ export default function Login() {
       });
       console.log(data)
       dispatch({ type: "USER_LOGIN", payload: data });
-      Cookies.set("userInfo",data);
+      Cookies.set("userInfo",JSON.stringify(data));
       router.push(redirect || "/");
     } catch (err) {
       enqueueSnackbar(

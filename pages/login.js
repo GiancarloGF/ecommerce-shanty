@@ -35,7 +35,7 @@ export default function Login() {
     if (userInfo) {
       router.push("/");
     }
-  }, []);
+  }, [userInfo,router]);
 
   const classes = useStyles();
 
@@ -46,8 +46,9 @@ export default function Login() {
         email,
         password,
       });
+      console.log(data)
       dispatch({ type: "USER_LOGIN", payload: data });
-      Cookies.set("userInfo", data);
+      Cookies.set("userInfo",data);
       router.push(redirect || "/");
     } catch (err) {
       enqueueSnackbar(

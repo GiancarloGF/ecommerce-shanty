@@ -23,10 +23,10 @@ import {
 import axios from "axios";
 import { useRouter } from "next/router";
 import useStyles from "../../utils/styles";
-import CheckoutWizard from "../../components/CheckoutWizard";
+// import CheckoutWizard from "../../components/CheckoutWizard";
 import { useSnackbar } from "notistack";
 import { getError } from "../../utils/error";
-import Cookies from "js-cookie";
+import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -36,6 +36,16 @@ function reducer(state, action) {
       return { ...state, loading: false, order: action.payload, error: "" };
     case "FETCH_FAIL":
       return { ...state, loading: false, error: action.payload };
+
+    case "PAY_REQUEST":
+      return { ...state, loadingPay: true };
+    case "PAY_SUCCESS":
+      return { ...state, loadingPay: false, successPay: true };
+    case "PAY_FAIL":
+      return { ...state, loadingPay: false, errorPay: action.payload };
+    case "PAY_RESET":
+      return { ...state, loadingPay: false, successPay: false, errorPay: "" };
+
     default:
       state;
   }
@@ -43,17 +53,21 @@ function reducer(state, action) {
 
 function Order({ params }) {
   const orderId = params.id;
+  const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
   const classes = useStyles();
   const router = useRouter();
   const { state } = useContext(Store);
   const { userInfo } = state;
 
   //Data from local reducer.
-  const [{ loading, error, order }, dispatch] = useReducer(reducer, {
-    loading: true,
-    order: {},
-    error: "",
-  });
+  const [{ loading, error, order, successPay }, dispatch] = useReducer(
+    reducer,
+    {
+      loading: true,
+      order: {},
+      error: "",
+    }
+  );
 
   const {
     shippingAddress,
@@ -77,7 +91,7 @@ function Order({ params }) {
     const fetchOrder = async () => {
       try {
         //In this case, reducer hook is used, not from the store in the context.
-        dispatch({ type: "FETCH_REQUEST" }); 
+        dispatch({ type: "FETCH_REQUEST" });
         //data from backend.
         const { data } = await axios.get(`/api/orders/${orderId}`, {
           headers: { authorization: `Bearer ${userInfo.token}` },
@@ -88,17 +102,86 @@ function Order({ params }) {
       }
     };
 
-    if (!order._id || (order._id && order._id !== orderId)) {
+    if (!order._id || successPay || (order._id && order._id !== orderId)) {
       fetchOrder();
+      if (successPay) {
+        dispatch({ type: "PAY_RESET" });
+      }
+    } else {
+      const loadPaypalScript = async () => {
+        const { data: clientId } = await axios.get("/api/keys/paypal", {
+          //Only authenticated users can access this key.
+          headers: { authorization: `Bearer ${userInfo.token}` },
+        });
+
+        //At this point we can access to the clientID, and with resetOptions, we can change clientID for other what we want for paypal.
+        paypalDispatch({
+          type: "resetOptions",
+          value: {
+            "client-id": clientId,
+            currency: "USD",
+          },
+        });
+
+        //With this action we load paypal script from paypal web site.
+        paypalDispatch({ 
+          type: "setLoadingStatus", 
+          value: "pending" });
+      };
+
+      loadPaypalScript();
     }
+  }, [order, successPay]); //When order, or successPay change, useEffect is called.
 
-  }, [order]);
+  const { closeSnackbar, enqueueSnackbar } = useSnackbar();
+  
+  // With this function, we call actions from paypal to create an order.
+  function createOrder(data, actions) {
+    return actions.order
+      .create({
+        purchase_units: [
+          {
+            amount: { value: totalPrice },
+          },
+        ],
+      })
+      .then((orderID) => { //This orderID is created for paypal, not for us.
+        return orderID;
+      });
+  }
+  //This function will happen after successful payment in paypal, so payment's status is updated from database.
+  function onApprove(data, actions) {
+    return actions.order.capture()
+    .then(async function (details) {
+      try {
+        dispatch({ type: "PAY_REQUEST" });
+        //State in backend is updated.
+        const { data } = await axios.put(
+          `/api/orders/${order._id}/pay`,
+          details,
+          {
+            headers: { authorization: `Bearer ${userInfo.token}` },
+          }
+        );
 
-//   const { closeSnackbar, enqueueSnackbar } = useSnackbar();
+        dispatch({ type: "PAY_SUCCESS", payload: data });
+
+        enqueueSnackbar("Order is paid", { variant: "success" });
+
+      } catch (err) {
+        dispatch({ type: "PAY_FAIL", payload: getError(err) });
+        enqueueSnackbar(getError(err), { variant: "error" });
+      }
+    });
+  }
+  //This function will happen when an error is raised on paypal payment.
+  function onError(err) {
+    enqueueSnackbar(getError(err), { variant: "error" });
+  }
 
   return (
     <Layout title={`Order ${orderId}`}>
-      <CheckoutWizard activeStep={3}></CheckoutWizard>
+      {/* <CheckoutWizard activeStep={3}></CheckoutWizard> */}
       <Typography component="h1" variant="h1">
         Order {orderId}
       </Typography>
@@ -248,6 +331,23 @@ function Order({ params }) {
                     </Grid>
                   </Grid>
                 </ListItem>
+                {/* UI part for implementing Paypal */}
+                {/* Only if the is not paid, show paypal bottons, otherwise hide it. */}
+                {!isPaid && (
+                  <ListItem>
+                    {isPending ? (
+                      <CircularProgress />
+                    ) : (
+                      <div className={classes.fullWidth}>
+                        <PayPalButtons
+                          createOrder={createOrder}
+                          onApprove={onApprove}
+                          onError={onError}
+                        ></PayPalButtons>
+                      </div>
+                    )}
+                  </ListItem>
+                )}
               </List>
             </Card>
           </Grid>

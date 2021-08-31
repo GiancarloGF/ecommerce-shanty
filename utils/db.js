@@ -1,4 +1,4 @@
-require('dotenv').config()
+// require('dotenv').config()
 import mongoose from 'mongoose';
 
 const connection = {};
@@ -24,9 +24,7 @@ async function connect() {
     console.log('new connection');
     connection.isConnected = db.connections[0].readyState;
   })
-  // console.log('me pase')
-  // console.log('new connection');
-  // connection.isConnected = db.connections[0].readyState;
+
 }
 
 async function disconnect() {

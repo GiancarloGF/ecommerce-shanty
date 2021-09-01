@@ -1,4 +1,9 @@
-import React, { useContext, useEffect, useReducer, useState } from "react";
+import React, { 
+  useContext, 
+  useEffect, 
+  useReducer, 
+  // useState 
+} from "react";
 import dynamic from "next/dynamic";
 import Layout from "../../components/Layout";
 import { Store } from "../../utils/Store";
@@ -15,7 +20,7 @@ import {
   TableCell,
   Link,
   CircularProgress,
-  Button,
+  // Button,
   Card,
   List,
   ListItem,
@@ -23,7 +28,6 @@ import {
 import axios from "axios";
 import { useRouter } from "next/router";
 import useStyles from "../../utils/styles";
-// import CheckoutWizard from "../../components/CheckoutWizard";
 import { useSnackbar } from "notistack";
 import { getError } from "../../utils/error";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
@@ -181,7 +185,6 @@ function Order({ params }) {
 
   return (
     <Layout title={`Order ${orderId}`}>
-      {/* <CheckoutWizard activeStep={3}></CheckoutWizard> */}
       <Typography component="h1" variant="h1">
         Order {orderId}
       </Typography>

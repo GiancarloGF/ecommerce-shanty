@@ -1,8 +1,8 @@
-import React, { 
-  useContext, 
-  useEffect, 
-  useReducer, 
-  // useState 
+import React, {
+  useContext,
+  useEffect,
+  useReducer,
+  // useState
 } from "react";
 import dynamic from "next/dynamic";
 import Layout from "../../components/Layout";
@@ -20,7 +20,7 @@ import {
   TableCell,
   Link,
   CircularProgress,
-  // Button,
+  Button,
   Card,
   List,
   ListItem,
@@ -32,6 +32,7 @@ import { useSnackbar } from "notistack";
 import { getError } from "../../utils/error";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 
+/**REDUCER */
 function reducer(state, action) {
   switch (action.type) {
     case "FETCH_REQUEST":
@@ -50,28 +51,45 @@ function reducer(state, action) {
     case "PAY_RESET":
       return { ...state, loadingPay: false, successPay: false, errorPay: "" };
 
+    case "DELIVER_REQUEST":
+      return { ...state, loadingDeliver: true };
+    case "DELIVER_SUCCESS":
+      return { ...state, loadingDeliver: false, successDeliver: true };
+    case "DELIVER_FAIL":
+      return { ...state, loadingDeliver: false, errorDeliver: action.payload };
+    case "DELIVER_RESET":
+      return {
+        ...state,
+        loadingDeliver: false,
+        successDeliver: false,
+        errorDeliver: "",
+      };
+
     default:
       state;
   }
 }
 
+/**PAGE'S FUNCTION */
 function Order({ params }) {
   const orderId = params.id;
-  const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
+
+  const [{ isPending }, paypalDispatch] = usePayPalScriptReducer(); //Paypal API
+
   const classes = useStyles();
   const router = useRouter();
   const { state } = useContext(Store);
   const { userInfo } = state;
 
   //Data from local reducer.
-  const [{ loading, error, order, successPay }, dispatch] = useReducer(
-    reducer,
-    {
-      loading: true,
-      order: {},
-      error: "",
-    }
-  );
+  const [
+    { loading, error, order, successPay, loadingDeliver, successDeliver },
+    dispatch,
+  ] = useReducer(reducer, {
+    loading: true,
+    order: {},
+    error: "",
+  });
 
   const {
     shippingAddress,
@@ -106,10 +124,19 @@ function Order({ params }) {
       }
     };
 
-    if (!order._id || successPay || (order._id && order._id !== orderId)) {
+    if (
+      !order._id ||
+      successPay ||
+      successDeliver ||
+      (order._id && order._id !== orderId)
+    ) {
       fetchOrder();
       if (successPay) {
         dispatch({ type: "PAY_RESET" });
+      }
+
+      if (successDeliver) {
+        dispatch({ type: "DELIVER_RESET" });
       }
     } else {
       const loadPaypalScript = async () => {
@@ -128,17 +155,18 @@ function Order({ params }) {
         });
 
         //With this action we load paypal script from paypal web site.
-        paypalDispatch({ 
-          type: "setLoadingStatus", 
-          value: "pending" });
+        paypalDispatch({
+          type: "setLoadingStatus",
+          value: "pending",
+        });
       };
 
       loadPaypalScript();
     }
-  }, [order, successPay]); //When order, or successPay change, useEffect is called.
+  }, [order, successPay, successDeliver]); //When order, or successPay change, useEffect is called.
 
   const { closeSnackbar, enqueueSnackbar } = useSnackbar();
-  
+
   // With this function, we call actions from paypal to create an order.
   function createOrder(data, actions) {
     return actions.order
@@ -149,14 +177,14 @@ function Order({ params }) {
           },
         ],
       })
-      .then((orderID) => { //This orderID is created for paypal, not for us.
+      .then((orderID) => {
+        //This orderID is created for paypal, not for us.
         return orderID;
       });
   }
   //This function will happen after successful payment in paypal, so payment's status is updated from database.
   function onApprove(data, actions) {
-    return actions.order.capture()
-    .then(async function (details) {
+    return actions.order.capture().then(async function (details) {
       try {
         dispatch({ type: "PAY_REQUEST" });
         //State in backend is updated.
@@ -171,7 +199,6 @@ function Order({ params }) {
         dispatch({ type: "PAY_SUCCESS", payload: data });
 
         enqueueSnackbar("Order is paid", { variant: "success" });
-
       } catch (err) {
         dispatch({ type: "PAY_FAIL", payload: getError(err) });
         enqueueSnackbar(getError(err), { variant: "error" });
@@ -181,6 +208,27 @@ function Order({ params }) {
   //This function will happen when an error is raised on paypal payment.
   function onError(err) {
     enqueueSnackbar(getError(err), { variant: "error" });
+  }
+
+  async function deliverOrderHandler() {
+    try {
+      dispatch({ type: "DELIVER_REQUEST" }); //Loading deliver...
+
+      const { data } = await axios.put( // isDelivered value is updated and new order is get back.
+        `/api/orders/${order._id}/deliver`,
+        {},
+        {
+          headers: { authorization: `Bearer ${userInfo.token}` },
+        }
+      );
+
+      dispatch({ type: "DELIVER_SUCCESS", payload: data }); //Loading deliver is false and succesDeliver is true.
+
+      enqueueSnackbar("Order is delivered", { variant: "success" }); //Successful delivery is displayed on client.
+    } catch (err) {
+      dispatch({ type: "DELIVER_FAIL", payload: getError(err) });
+      enqueueSnackbar(getError(err), { variant: "error" });
+    }
   }
 
   return (
@@ -349,6 +397,19 @@ function Order({ params }) {
                         ></PayPalButtons>
                       </div>
                     )}
+                  </ListItem>
+                )}
+                {userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+                  <ListItem>
+                    {loadingDeliver && <CircularProgress />}
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      color="primary"
+                      onClick={deliverOrderHandler}
+                    >
+                      Deliver Order
+                    </Button>
                   </ListItem>
                 )}
               </List>

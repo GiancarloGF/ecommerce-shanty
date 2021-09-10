@@ -5,8 +5,8 @@ import React, {
   // useState
 } from "react";
 import dynamic from "next/dynamic";
-import Layout from "../../components/Layout";
-import { Store } from "../../utils/Store";
+import Layout from "components/Layout";
+import { Store } from "utils/Store";
 import NextLink from "next/link";
 import Image from "next/image";
 import {
@@ -27,9 +27,9 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import { useRouter } from "next/router";
-import useStyles from "../../utils/styles";
+import useStyles from "utils/styles";
 import { useSnackbar } from "notistack";
-import { getError } from "../../utils/error";
+import { getError } from "utils/error";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 
 /**REDUCER */

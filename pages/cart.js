@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import dynamic from "next/dynamic"; //To fix the card-subbotal issue (1)
-import Layout from "../components/Layout";
-import { Store } from "../utils/Store";
+import Layout from "components/Layout";
+import { Store } from "utils/Store";
 import NextLink from "next/link";
 import Image from "next/image";
 import {

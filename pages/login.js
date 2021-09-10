@@ -8,15 +8,15 @@ import {
 } from "@material-ui/core";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import Layout from "../components/Layout";
-import useStyles from "../utils/styles";
+import Layout from "components/Layout";
+import useStyles from "utils/styles";
 import axios from "axios";
 import React, { useContext, useEffect } from "react";
-import { Store } from "../utils/Store";
+import { Store } from "utils/Store";
 import Cookies from "js-cookie";
 import { Controller, useForm } from "react-hook-form";
 import { useSnackbar } from 'notistack';
-import { getError } from '../utils/error';
+import { getError } from 'utils/error';
 
 export default function Login() {
   const {

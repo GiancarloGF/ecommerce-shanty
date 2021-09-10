@@ -1,10 +1,10 @@
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
-import { Store } from "../utils/Store";
-import Layout from "../components/Layout";
-import CheckoutWizard from "../components/CheckoutWizard";
-import useStyles from "../utils/styles";
+import { Store } from "utils/Store";
+import Layout from "components/Layout";
+import CheckoutWizard from "components/CheckoutWizard";
+import useStyles from "utils/styles";
 import {
   Button,
   FormControl,

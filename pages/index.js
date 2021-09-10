@@ -9,14 +9,14 @@ import {
   Button,
 } from '@material-ui/core';
 import NextLink from 'next/link'
-import Layout from '../components/Layout';
-// import data from '../utils/data';
-import db from '../utils/db';
-import Product from '../models/Product';
+import Layout from 'components/Layout';
+// import data from 'utils/data';
+import db from 'utils/db';
+import Product from 'models/Product';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useContext } from 'react';
-import { Store } from '../utils/Store';
+import { Store } from 'utils/Store';
 
 export default function Home(props) {
   const router = useRouter();

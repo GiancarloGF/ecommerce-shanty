@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import db from '../../utils/db';
-// import {connect} from '../../utils/db'
+import db from 'utils/db';
+// import {connect} from 'utils/db'
 export default async function hello(req, res) {
   await db.connect();
   await db.disconnect();

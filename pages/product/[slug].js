@@ -10,12 +10,12 @@ import {
   Card,
   Button,
 } from '@material-ui/core';
-import Layout from '../../components/Layout';
-import useStyles from '../../utils/styles';
-import Product from '../../models/Product';
-import db from '../../utils/db';
+import Layout from 'components/Layout';
+import useStyles from 'utils/styles';
+import Product from 'models/Product';
+import db from 'utils/db';
 import axios from 'axios';
-import { Store } from '../../utils/Store';
+import { Store } from 'utils/Store';
 import {useRouter} from 'next/router'
 
 export default function ProductScreen(props) {

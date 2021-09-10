@@ -2,8 +2,8 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import dynamic from "next/dynamic"; //To render a page in client side rendering.
-import Layout from "../components/Layout";
-import { Store } from "../utils/Store";
+import Layout from "components/Layout";
+import { Store } from "utils/Store";
 import NextLink from "next/link";
 import Image from "next/image";
 import {
@@ -26,10 +26,10 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 // import { useRouter } from "next/router";
-import useStyles from "../utils/styles";
-import CheckoutWizard from "../components/CheckoutWizard";
+import useStyles from "utils/styles";
+import CheckoutWizard from "components/CheckoutWizard";
 import { useSnackbar } from "notistack";
-import { getError } from "../utils/error";
+import { getError } from "utils/error";
 import Cookies from "js-cookie";
 import router from "next/router";
 

@@ -78,23 +78,23 @@ function ProductEdit({ params }) {
       fetchData();
     }
   }, []);
-  
-  const submitHandler = async ({ name }) => {
-    closeSnackbar();
-    try {
-      const { data } = await axios.put(
-        `/api/admin/products/${productId}`,
-        {
-          name,
-        },
-        { headers: { authorization: `Bearer ${userInfo.token}` } }
-      );
 
-      enqueueSnackbar("Product updated successfully", { variant: "success" });
-    } catch (err) {
-      enqueueSnackbar(getError(err), { variant: "error" });
-    }
-  };
+//   const submitHandler = async ({ name }) => {
+//     closeSnackbar();
+//     try {
+//       const { data } = await axios.put(
+//         `/api/admin/products/${productId}`,
+//         {
+//           name,
+//         },
+//         { headers: { authorization: `Bearer ${userInfo.token}` } }
+//       );
+
+//       enqueueSnackbar("Product updated successfully", { variant: "success" });
+//     } catch (err) {
+//       enqueueSnackbar(getError(err), { variant: "error" });
+//     }
+//   };
   return (
     <Layout title={`Edit Product ${productId}`}>
       <Grid container spacing={1}>
@@ -135,7 +135,7 @@ function ProductEdit({ params }) {
               </ListItem>
               <ListItem>
                 <form
-                  onSubmit={handleSubmit(submitHandler)}
+                //   onSubmit={handleSubmit(submitHandler)}
                   className={classes.form}
                 >
                   <List>

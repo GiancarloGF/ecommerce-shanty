@@ -1,7 +1,7 @@
-require('dotenv').config()
-import nc from 'next-connect';
-import Product from 'models/Product';
-import db from 'utils/db';
+require("dotenv").config();
+import nc from "next-connect";
+import Product from "models/Product";
+import db from "utils/db";
 
 const handler = nc();
 
@@ -13,4 +13,3 @@ handler.get(async (req, res) => {
 });
 
 export default handler;
-

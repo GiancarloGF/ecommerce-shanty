@@ -9,14 +9,14 @@ import {
 import axios from "axios";
 import { useRouter } from "next/router";
 import NextLink from "next/link";
-import React, { useContext, useEffect} from "react";
+import React, { useContext, useEffect } from "react";
 import Layout from "components/Layout";
 import { Store } from "utils/Store";
 import useStyles from "utils/styles";
 import Cookies from "js-cookie";
-import { Controller, useForm } from 'react-hook-form';
-import { useSnackbar } from 'notistack';
-import { getError } from 'utils/error';
+import { Controller, useForm } from "react-hook-form";
+import { useSnackbar } from "notistack";
+import { getError } from "utils/error";
 
 export default function Register() {
   const {
@@ -40,7 +40,7 @@ export default function Register() {
   const submitHandler = async ({ name, email, password, confirmPassword }) => {
     closeSnackbar();
     if (password !== confirmPassword) {
-      enqueueSnackbar("Passwords don't match", { variant: 'error' });
+      enqueueSnackbar("Passwords don't match", { variant: "error" });
       return;
     }
     try {
@@ -53,7 +53,7 @@ export default function Register() {
       Cookies.set("userInfo", data);
       router.push(redirect || "/");
     } catch (err) {
-      enqueueSnackbar(getError(err), { variant: 'error' });
+      enqueueSnackbar(getError(err), { variant: "error" });
     }
   };
   return (
@@ -64,7 +64,7 @@ export default function Register() {
         </Typography>
         <List>
           <ListItem>
-          <Controller
+            <Controller
               name="name"
               control={control}
               defaultValue=""
@@ -78,14 +78,14 @@ export default function Register() {
                   fullWidth
                   id="name"
                   label="Name"
-                  inputProps={{ type: 'name' }}
+                  inputProps={{ type: "name" }}
                   error={Boolean(errors.name)}
                   helperText={
                     errors.name
-                      ? errors.name.type === 'minLength'
-                        ? 'Name length is more than 1'
-                        : 'Name is required'
-                      : ''
+                      ? errors.name.type === "minLength"
+                        ? "Name length is more than 1"
+                        : "Name is required"
+                      : ""
                   }
                   {...field}
                 ></TextField>
@@ -93,7 +93,7 @@ export default function Register() {
             ></Controller>
           </ListItem>
           <ListItem>
-          <Controller
+            <Controller
               name="email"
               control={control}
               defaultValue=""
@@ -107,14 +107,14 @@ export default function Register() {
                   fullWidth
                   id="email"
                   label="Email"
-                  inputProps={{ type: 'email' }}
+                  inputProps={{ type: "email" }}
                   error={Boolean(errors.email)}
                   helperText={
                     errors.email
-                      ? errors.email.type === 'pattern'
-                        ? 'Email is not valid'
-                        : 'Email is required'
-                      : ''
+                      ? errors.email.type === "pattern"
+                        ? "Email is not valid"
+                        : "Email is required"
+                      : ""
                   }
                   {...field}
                 ></TextField>
@@ -122,7 +122,7 @@ export default function Register() {
             ></Controller>
           </ListItem>
           <ListItem>
-          <Controller
+            <Controller
               name="password"
               control={control}
               defaultValue=""
@@ -136,14 +136,14 @@ export default function Register() {
                   fullWidth
                   id="password"
                   label="Password"
-                  inputProps={{ type: 'password' }}
+                  inputProps={{ type: "password" }}
                   error={Boolean(errors.password)}
                   helperText={
                     errors.password
-                      ? errors.password.type === 'minLength'
-                        ? 'Password length is more than 5'
-                        : 'Password is required'
-                      : ''
+                      ? errors.password.type === "minLength"
+                        ? "Password length is more than 5"
+                        : "Password is required"
+                      : ""
                   }
                   {...field}
                 ></TextField>
@@ -151,7 +151,7 @@ export default function Register() {
             ></Controller>
           </ListItem>
           <ListItem>
-          <Controller
+            <Controller
               name="confirmPassword"
               control={control}
               defaultValue=""
@@ -165,14 +165,14 @@ export default function Register() {
                   fullWidth
                   id="confirmPassword"
                   label="Confirm Password"
-                  inputProps={{ type: 'password' }}
+                  inputProps={{ type: "password" }}
                   error={Boolean(errors.confirmPassword)}
                   helperText={
                     errors.confirmPassword
-                      ? errors.confirmPassword.type === 'minLength'
-                        ? 'Confirm Password length is more than 5'
-                        : 'Confirm  Password is required'
-                      : ''
+                      ? errors.confirmPassword.type === "minLength"
+                        ? "Confirm Password length is more than 5"
+                        : "Confirm  Password is required"
+                      : ""
                   }
                   {...field}
                 ></TextField>

@@ -1,10 +1,9 @@
 //Only authenticated users can see this page.
 
-import nc from 'next-connect';
-import Order from 'models/Order';
-import db from 'utils/db';
-import { isAuth } from 'utils/auth';
-
+import nc from "next-connect";
+import Order from "models/Order";
+import db from "utils/db";
+import { isAuth } from "utils/auth";
 
 const handler = nc();
 handler.use(isAuth); //First of all, user authentication is validated.

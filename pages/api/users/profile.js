@@ -1,8 +1,8 @@
-import nc from 'next-connect';
-import bcrypt from 'bcryptjs';
-import User from 'models/User';
-import db from 'utils/db';
-import { signToken, isAuth } from 'utils/auth';
+import nc from "next-connect";
+import bcrypt from "bcryptjs";
+import User from "models/User";
+import db from "utils/db";
+import { signToken, isAuth } from "utils/auth";
 
 const handler = nc();
 handler.use(isAuth);
@@ -30,7 +30,6 @@ handler.put(async (req, res) => {
     email: user.email,
     isAdmin: user.isAdmin,
   });
-  
 });
 
 export default handler;

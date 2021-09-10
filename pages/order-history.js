@@ -1,10 +1,8 @@
-
-
-import axios from 'axios';
-import dynamic from 'next/dynamic';
-import { useRouter } from 'next/router';
-import NextLink from 'next/link';
-import React, { useEffect, useContext, useReducer } from 'react';
+import axios from "axios";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import NextLink from "next/link";
+import React, { useEffect, useContext, useReducer } from "react";
 import {
   CircularProgress,
   Grid,
@@ -20,19 +18,19 @@ import {
   TableBody,
   Button,
   ListItemText,
-} from '@material-ui/core';
-import { getError } from 'utils/error';
-import { Store } from 'utils/Store';
-import Layout from 'components/Layout';
-import useStyles from 'utils/styles';
+} from "@material-ui/core";
+import { getError } from "utils/error";
+import { Store } from "utils/Store";
+import Layout from "components/Layout";
+import useStyles from "utils/styles";
 
 function reducer(state, action) {
   switch (action.type) {
-    case 'FETCH_REQUEST':
-      return { ...state, loading: true, error: '' };
-    case 'FETCH_SUCCESS':
-      return { ...state, loading: false, orders: action.payload, error: '' };
-    case 'FETCH_FAIL':
+    case "FETCH_REQUEST":
+      return { ...state, loading: true, error: "" };
+    case "FETCH_SUCCESS":
+      return { ...state, loading: false, orders: action.payload, error: "" };
+    case "FETCH_FAIL":
       return { ...state, loading: false, error: action.payload };
     default:
       state;
@@ -49,28 +47,25 @@ function OrderHistory() {
   const [{ loading, error, orders }, dispatch] = useReducer(reducer, {
     loading: true,
     orders: [],
-    error: '',
+    error: "",
   });
 
   useEffect(() => {
     if (!userInfo) {
-      router.push('/login');
+      router.push("/login");
     }
 
     const fetchOrders = async () => {
       try {
-        dispatch({ type: 'FETCH_REQUEST' });
+        dispatch({ type: "FETCH_REQUEST" });
 
         const { data } = await axios.get(`/api/orders/history`, {
           headers: { authorization: `Bearer ${userInfo.token}` },
         });
 
-        dispatch({ type: 'FETCH_SUCCESS', payload: data });
-
+        dispatch({ type: "FETCH_SUCCESS", payload: data });
       } catch (err) {
-
-        dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
-
+        dispatch({ type: "FETCH_FAIL", payload: getError(err) });
       }
     };
 
@@ -132,12 +127,12 @@ function OrderHistory() {
                             <TableCell>
                               {order.isPaid
                                 ? `paid at ${order.paidAt}`
-                                : 'not paid'}
+                                : "not paid"}
                             </TableCell>
                             <TableCell>
                               {order.isDelivered
                                 ? `delivered at ${order.deliveredAt}`
-                                : 'not delivered'}
+                                : "not delivered"}
                             </TableCell>
                             <TableCell>
                               <NextLink href={`/order/${order._id}`} passHref>

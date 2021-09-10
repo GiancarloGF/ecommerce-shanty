@@ -7,16 +7,16 @@ import {
   Typography,
   CardActions,
   Button,
-} from '@material-ui/core';
-import NextLink from 'next/link'
-import Layout from 'components/Layout';
+} from "@material-ui/core";
+import NextLink from "next/link";
+import Layout from "components/Layout";
 // import data from 'utils/data';
-import db from 'utils/db';
-import Product from 'models/Product';
-import axios from 'axios';
-import { useRouter } from 'next/router';
-import { useContext } from 'react';
-import { Store } from 'utils/Store';
+import db from "utils/db";
+import Product from "models/Product";
+import axios from "axios";
+import { useRouter } from "next/router";
+import { useContext } from "react";
+import { Store } from "utils/Store";
 
 export default function Home(props) {
   const router = useRouter();
@@ -28,17 +28,17 @@ export default function Home(props) {
     const quantity = existItem ? existItem.quantity + 1 : 1;
     const { data } = await axios.get(`/api/products/${product._id}`);
     if (data.countInStock < quantity) {
-      window.alert('Sorry. Product is out of stock');
+      window.alert("Sorry. Product is out of stock");
       return;
     }
-    dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity } });
-    router.push('/cart');
+    dispatch({ type: "CART_ADD_ITEM", payload: { ...product, quantity } });
+    router.push("/cart");
   };
 
   return (
     <Layout>
       <div>
-      <h1>Products</h1>
+        <h1>Products</h1>
         <Grid container spacing={3}>
           {products.map((product) => (
             <Grid item md={4} key={product.name}>
@@ -55,7 +55,7 @@ export default function Home(props) {
                     </CardContent>
                   </CardActionArea>
                 </NextLink>
-               
+
                 <CardActions>
                   <Typography>${product.price}</Typography>
                   <Button
@@ -70,10 +70,9 @@ export default function Home(props) {
             </Grid>
           ))}
         </Grid>
-    </div>
+      </div>
     </Layout>
-    
-  )
+  );
 }
 
 export async function getServerSideProps() {

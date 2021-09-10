@@ -15,8 +15,8 @@ import React, { useContext, useEffect } from "react";
 import { Store } from "utils/Store";
 import Cookies from "js-cookie";
 import { Controller, useForm } from "react-hook-form";
-import { useSnackbar } from 'notistack';
-import { getError } from 'utils/error';
+import { useSnackbar } from "notistack";
+import { getError } from "utils/error";
 
 export default function Login() {
   const {
@@ -36,7 +36,7 @@ export default function Login() {
     if (userInfo) {
       router.push("/");
     }
-  }, [userInfo,router]);
+  }, [userInfo, router]);
 
   const classes = useStyles();
 
@@ -47,12 +47,12 @@ export default function Login() {
         email,
         password,
       });
-      console.log(data)
+      console.log(data);
       dispatch({ type: "USER_LOGIN", payload: data });
-      Cookies.set("userInfo",JSON.stringify(data));
+      Cookies.set("userInfo", JSON.stringify(data));
       router.push(redirect || "/");
     } catch (err) {
-      enqueueSnackbar(getError(err), { variant: 'error' });
+      enqueueSnackbar(getError(err), { variant: "error" });
     }
   };
   return (

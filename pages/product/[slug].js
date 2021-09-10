@@ -1,6 +1,6 @@
-import React ,{ useContext } from 'react';
-import NextLink from 'next/link';
-import Image from 'next/image';
+import React, { useContext } from "react";
+import NextLink from "next/link";
+import Image from "next/image";
 import {
   Grid,
   Link,
@@ -9,21 +9,20 @@ import {
   Typography,
   Card,
   Button,
-} from '@material-ui/core';
-import Layout from 'components/Layout';
-import useStyles from 'utils/styles';
-import Product from 'models/Product';
-import db from 'utils/db';
-import axios from 'axios';
-import { Store } from 'utils/Store';
-import {useRouter} from 'next/router'
+} from "@material-ui/core";
+import Layout from "components/Layout";
+import useStyles from "utils/styles";
+import Product from "models/Product";
+import db from "utils/db";
+import axios from "axios";
+import { Store } from "utils/Store";
+import { useRouter } from "next/router";
 
 export default function ProductScreen(props) {
-  const router = useRouter()
+  const router = useRouter();
   const { state, dispatch } = useContext(Store);
-  const {product} = props;
+  const { product } = props;
   const classes = useStyles();
-
 
   if (!product) {
     return <div>Product Not Found</div>;
@@ -34,11 +33,11 @@ export default function ProductScreen(props) {
     const quantity = existItem ? existItem.quantity + 1 : 1;
     const { data } = await axios.get(`/api/products/${product._id}`); //A product is requested to API.
     if (data.countInStock <= quantity) {
-      window.alert('Sorry. Product is out of stock');
+      window.alert("Sorry. Product is out of stock");
       return;
     }
-    dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity } });
-    router.push('/cart');
+    dispatch({ type: "CART_ADD_ITEM", payload: { ...product, quantity } });
+    router.push("/cart");
   };
 
   return (
@@ -64,7 +63,10 @@ export default function ProductScreen(props) {
           <List>
             <ListItem>
               {/* Typography's default element is <p>, so this element is changed to <h1> in order to improve accesibility and SEO */}
-              <Typography component="h1" variant="h1">{product.name}</Typography> {/*variant is necessary to apply styling with MUI theme in components/Layout.js, when an default element is changed*/}
+              <Typography component="h1" variant="h1">
+                {product.name}
+              </Typography>{" "}
+              {/*variant is necessary to apply styling with MUI theme in components/Layout.js, when an default element is changed*/}
             </ListItem>
             <ListItem>
               <Typography>Category: {product.category}</Typography>
@@ -102,7 +104,7 @@ export default function ProductScreen(props) {
                   </Grid>
                   <Grid item xs={6}>
                     <Typography>
-                      {product.countInStock > 0 ? 'In stock' : 'Unavailable'}
+                      {product.countInStock > 0 ? "In stock" : "Unavailable"}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -114,7 +116,7 @@ export default function ProductScreen(props) {
                   color="primary"
                   onClick={addToCartHandler}
                 >
-                Add to cart
+                  Add to cart
                 </Button>
               </ListItem>
             </List>
@@ -123,14 +125,13 @@ export default function ProductScreen(props) {
       </Grid>
     </Layout>
   );
-
 }
 
 export async function getServerSideProps(context) {
   const { params } = context;
   const { slug } = params;
   await db.connect();
-  const product = await Product.findOne({ slug }).lean();  //lean: mongoose option. See doc. Transforms object instance to pojo.
+  const product = await Product.findOne({ slug }).lean(); //lean: mongoose option. See doc. Transforms object instance to pojo.
   await db.disconnect();
   return {
     props: {

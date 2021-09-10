@@ -1,10 +1,10 @@
-import nc from 'next-connect';
-import Order from 'models/Order';
-import Product from 'models/Product';
-import User from 'models/User';
-import { isAuth, isAdmin} from 'utils/auth';
-import db from 'utils/db';
-import { onError } from 'utils/error';
+import nc from "next-connect";
+import Order from "models/Order";
+import Product from "models/Product";
+import User from "models/User";
+import { isAuth, isAdmin } from "utils/auth";
+import db from "utils/db";
+import { onError } from "utils/error";
 
 const handler = nc({
   onError,
@@ -20,7 +20,7 @@ handler.get(async (req, res) => {
     {
       $group: {
         _id: null,
-        sales: { $sum: '$totalPrice' },
+        sales: { $sum: "$totalPrice" },
       },
     },
   ]);
@@ -30,8 +30,8 @@ handler.get(async (req, res) => {
   const salesData = await Order.aggregate([
     {
       $group: {
-        _id: { $dateToString: { format: '%Y-%m', date: '$createdAt' } },
-        totalSales: { $sum: '$totalPrice' },
+        _id: { $dateToString: { format: "%Y-%m", date: "$createdAt" } },
+        totalSales: { $sum: "$totalPrice" },
       },
     },
   ]);

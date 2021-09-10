@@ -1,8 +1,8 @@
-import nc from 'next-connect';
-import bcrypt from 'bcryptjs';
-import User from 'models/User';
-import db from 'utils/db';
-import { signToken } from 'utils/auth';
+import nc from "next-connect";
+import bcrypt from "bcryptjs";
+import User from "models/User";
+import db from "utils/db";
+import { signToken } from "utils/auth";
 
 const handler = nc();
 
@@ -21,7 +21,7 @@ handler.post(async (req, res) => {
   await db.disconnect();
 
   const token = signToken(user);
-  
+
   res.send({
     token,
     _id: user._id,

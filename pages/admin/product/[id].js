@@ -19,7 +19,7 @@ import { Store } from "../../../utils/Store";
 import Layout from "../../../components/Layout";
 import useStyles from "../../../utils/styles";
 import { Controller, useForm } from "react-hook-form";
-import { useSnackbar } from "notistack";
+// import { useSnackbar } from "notistack";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -42,12 +42,12 @@ function ProductEdit({ params }) {
     error: "",
   });
   const {
-    handleSubmit,
+    // handleSubmit,
     control,
     formState: { errors },
     setValue,
   } = useForm();
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+//   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const router = useRouter();
   const classes = useStyles();
   const { userInfo } = state;

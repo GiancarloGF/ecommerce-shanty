@@ -163,6 +163,7 @@ function Order({ params }) {
 
       loadPaypalScript();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order, successPay, successDeliver]); //When order, or successPay change, useEffect is called.
 
   const {enqueueSnackbar } = useSnackbar();

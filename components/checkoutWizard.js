@@ -1,6 +1,6 @@
 import { Step, StepLabel, Stepper } from '@material-ui/core';
 import React from 'react';
-import useStyles from '../utils/styles';
+import useStyles from 'utils/styles';
 
 export default function CheckoutWizard({ activeStep = 0 }) {
   const classes= useStyles();

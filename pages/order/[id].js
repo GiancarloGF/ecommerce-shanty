@@ -165,7 +165,7 @@ function Order({ params }) {
     }
   }, [order, successPay, successDeliver]); //When order, or successPay change, useEffect is called.
 
-  const { closeSnackbar, enqueueSnackbar } = useSnackbar();
+  const {enqueueSnackbar } = useSnackbar();
 
   // With this function, we call actions from paypal to create an order.
   function createOrder(data, actions) {

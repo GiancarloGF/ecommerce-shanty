@@ -43,7 +43,7 @@ Users should be able to:
 
 ### Links
 
-- Live Site URL: [joblisting-app](https://shantyweb.vercel.app/)
+- Live Site URL: [Shanty Ecommerce](https://shantyweb.vercel.app/)
 
 ## My process
 

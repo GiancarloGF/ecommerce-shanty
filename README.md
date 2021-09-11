@@ -2,7 +2,7 @@
 
 View: https://shantyweb.vercel.app/
 
-This project is an Ecommerce website for a jewelry business, made it from Front-end with to Back-end with Nextjs, and MongoDB as database and deployed on Vercel.
+This project is an Ecommerce website for a jewelry business, made it from Front-end to Back-end with Nextjs, and MongoDB as database and deployed on Vercel.
 
 ## Table of contents
 

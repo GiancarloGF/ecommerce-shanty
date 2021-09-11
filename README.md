@@ -53,7 +53,7 @@ Users should be able to:
 - [Nextjs](https://nextjs.org/) - React Framework
 - CSS - Styled JSX and CSS modules.
 - [Material UI components](https://material-ui.com/) - React Components
-- [MongoDV](https://www.mongodb.com/) - Not relational database.
+- [MongoDB](https://www.mongodb.com/) - Not relational database.
 - [Paypal API](https://developer.paypal.com/) - Paypay for Developers
 
 

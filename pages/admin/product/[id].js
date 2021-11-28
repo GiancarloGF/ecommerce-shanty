@@ -19,7 +19,7 @@ import { Store } from "../../../utils/Store";
 import Layout from "../../../components/Layout";
 import useStyles from "../../../utils/styles";
 import { Controller, useForm } from "react-hook-form";
-// import { useSnackbar } from "notistack";
+import { useSnackbar } from "notistack";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -29,6 +29,12 @@ function reducer(state, action) {
       return { ...state, loading: false, error: "" };
     case "FETCH_FAIL":
       return { ...state, loading: false, error: action.payload };
+    case "UPDATE_REQUEST":
+      return { ...state, loadingUpdate: true, errorUpdate: "" };
+    case "UPDATE_SUCCESS":
+      return { ...state, loadingUpdate: false, errorUpdate: "" };
+    case "UPDATE_FAIL":
+      return { ...state, loadingUpdate: false, errorUpdate: action.payload };
     default:
       return state;
   }
@@ -37,17 +43,17 @@ function reducer(state, action) {
 function ProductEdit({ params }) {
   const productId = params.id;
   const { state } = useContext(Store);
-  const [{ loading, error }, dispatch] = useReducer(reducer, {
+  const [{ loading, error, loadingUpdate }, dispatch] = useReducer(reducer, {
     loading: true,
     error: "",
   });
   const {
-    // handleSubmit,
+    handleSubmit,
     control,
     formState: { errors },
     setValue,
   } = useForm();
-//   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const router = useRouter();
   const classes = useStyles();
   const { userInfo } = state;
@@ -60,7 +66,7 @@ function ProductEdit({ params }) {
         try {
           dispatch({ type: "FETCH_REQUEST" });
           const { data } = await axios.get(`/api/admin/products/${productId}`, {
-            headers: { authorization: `Bearer ${userInfo.token}` },
+            headers: { authorization: `Bearer ${userInfo.token}` }, //This is the token from the login used to authenticate the user when fetching data.
           });
           dispatch({ type: "FETCH_SUCCESS" });
           setValue("name", data.name);
@@ -79,22 +85,43 @@ function ProductEdit({ params }) {
     }
   }, []);
 
-//   const submitHandler = async ({ name }) => {
-//     closeSnackbar();
-//     try {
-//       const { data } = await axios.put(
-//         `/api/admin/products/${productId}`,
-//         {
-//           name,
-//         },
-//         { headers: { authorization: `Bearer ${userInfo.token}` } }
-//       );
+  const submitHandler = async ({
+    name,
+    slug,
+    price,
+    category,
+    image,
+    brand,
+    countInStock,
+    description,
+  }) => {
+    closeSnackbar();
+    try {
+      dispatch({ type: "UPDATE_REQUEST" });
 
-//       enqueueSnackbar("Product updated successfully", { variant: "success" });
-//     } catch (err) {
-//       enqueueSnackbar(getError(err), { variant: "error" });
-//     }
-//   };
+      await axios.put(
+        `/api/admin/products/${productId}`,
+        {
+          name,
+          slug,
+          price,
+          category,
+          image,
+          brand,
+          countInStock,
+          description,
+        },
+        { headers: { authorization: `Bearer ${userInfo.token}` } }
+      );
+      dispatch({ type: "UPDATE_SUCCESS" });
+      enqueueSnackbar("Product updated successfully", { variant: "success" });
+      router.push("/admin/products");
+    } catch (err) {
+      dispatch({ type: "UPDATE_FAIL", payload: getError(err) });
+      enqueueSnackbar(getError(err), { variant: "error" });
+    }
+  };
+
   return (
     <Layout title={`Edit Product ${productId}`}>
       <Grid container spacing={1}>
@@ -135,7 +162,7 @@ function ProductEdit({ params }) {
               </ListItem>
               <ListItem>
                 <form
-                //   onSubmit={handleSubmit(submitHandler)}
+                  onSubmit={handleSubmit(submitHandler)}
                   className={classes.form}
                 >
                   <List>
@@ -328,6 +355,7 @@ function ProductEdit({ params }) {
                       >
                         Update
                       </Button>
+                      {loadingUpdate && <CircularProgress />}
                     </ListItem>
                   </List>
                 </form>

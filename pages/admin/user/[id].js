@@ -91,7 +91,7 @@ function UserEdit({ params }) {
       };
       fetchData();
     }
-  }, []);
+  }, []);// eslint-disable-line no-use-before-define
 
   const submitHandler = async ({ name }) => {
     closeSnackbar();

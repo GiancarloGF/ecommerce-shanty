@@ -103,7 +103,7 @@ export default function Layout({ title, description, children }) {
 
   useEffect(() => {
     fetchCategories();
-  }, []);
+  }, []);// eslint-disable-line no-use-before-define
 
   const darkModeChangeHandler = () => {
     dispatch({ type: darkMode ? "DARK_MODE_OFF" : "DARK_MODE_ON" });
@@ -129,6 +129,8 @@ export default function Layout({ title, description, children }) {
     dispatch({ type: "USER_LOGOUT" });
     Cookies.remove("userInfo");
     Cookies.remove("cartItems");
+    Cookies.remove('shippinhAddress');
+    Cookies.remove('paymentMethod');
     router.push("/");
   };
 

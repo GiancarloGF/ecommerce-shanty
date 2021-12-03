@@ -86,7 +86,7 @@ function AdminProducts() {
     } else {
       fetchData();
     }
-  }, [successDelete]);
+  }, [successDelete]);// eslint-disable-line no-use-before-define
 
   const { enqueueSnackbar } = useSnackbar();
 

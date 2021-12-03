@@ -12,7 +12,7 @@ const initialState = {
       : [],
     shippingAddress: Cookies.get("shippingAddress")
       ? JSON.parse(Cookies.get("shippingAddress"))
-      : {},
+      : { location: {} },
     paymentMethod: Cookies.get("paymentMethod")
       ? Cookies.get("paymentMethod")
       : "",
@@ -38,11 +38,11 @@ function reducer(state, action) {
       //CartItems is updated.
       const cartItems = existItem
         ? //If the item already exist in cartItems, then the item is  updated only (not added).
-          state.cart.cartItems.map((item) =>
-            item.name === existItem.name ? newItem : item
-          )
+        state.cart.cartItems.map((item) =>
+          item.name === existItem.name ? newItem : item
+        )
         : //If the item not exist in cartItems, then the item is added and cartItem is updated (increase its length)
-          [...state.cart.cartItems, newItem];
+        [...state.cart.cartItems, newItem];
 
       Cookies.set("cartItems", JSON.stringify(cartItems));
       return { ...state, cart: { ...state.cart, cartItems } }; //Updated state.
@@ -62,7 +62,24 @@ function reducer(state, action) {
     case "SAVE_SHIPPING_ADDRESS":
       return {
         ...state,
-        cart: { ...state.cart, shippingAddress: action.payload },
+        cart: {
+          ...state.cart,
+          shippingAddress: {
+            ...state.cart.shippingAddress,
+            ...action.payload,
+          },
+        },
+      };
+    case 'SAVE_SHIPPING_ADDRESS_MAP_LOCATION':
+      return {
+        ...state,
+        cart: {
+          ...state.cart,
+          shippingAddress: {
+            ...state.cart.shippingAddress,
+            location: action.payload,
+          },
+        },
       };
 
     case "SAVE_PAYMENT_METHOD":
@@ -78,7 +95,11 @@ function reducer(state, action) {
       return {
         ...state,
         userInfo: null,
-        cart: { cartItems: [], shippingAddress: {}, paymentMethod: "" },
+        cart: {
+          cartItems: [],
+          shippingAddress: { location: {} },
+          paymentMethod: '',
+        },
       };
 
     default:

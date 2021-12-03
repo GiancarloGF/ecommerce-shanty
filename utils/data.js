@@ -24,6 +24,8 @@ const data = {
       category: "Shirts",
 
       image: "/images/shirt1.jpg",
+      isFeatured: true,
+      featuredImage: '/images/banner1.jpg',
 
       price: 70,
 
@@ -46,6 +48,8 @@ const data = {
       category: "Shirts",
 
       image: "/images/shirt2.jpg",
+      isFeatured: true,
+      featuredImage: '/images/banner2.jpg',
 
       price: 80,
 

@@ -1,6 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
-import NextLink from "next/link";
-import Image from "next/image";
+import React, { useContext, useEffect, useState } from 'react';
+import NextLink from 'next/link';
+import Image from 'next/image';
 import {
   Grid,
   Link,
@@ -11,16 +11,16 @@ import {
   Button,
   TextField,
   CircularProgress,
-} from "@material-ui/core";
+} from '@material-ui/core';
 import Rating from '@material-ui/lab/Rating';
-import Layout from "components/Layout";
-import useStyles from "utils/styles";
-import Product from "models/Product";
-import db from "utils/db";
-import axios from "axios";
-import { Store } from "utils/Store";
+import Layout from '../../components/Layout';
+import useStyles from '../../utils/styles';
+import Product from '../../models/Product';
+import db from '../../utils/db';
+import axios from 'axios';
+import { Store } from '../../utils/Store';
 import { getError } from '../../utils/error';
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router';
 import { useSnackbar } from 'notistack';
 
 export default function ProductScreen(props) {
@@ -74,17 +74,16 @@ export default function ProductScreen(props) {
   if (!product) {
     return <div>Product Not Found</div>;
   }
-
   const addToCartHandler = async () => {
     const existItem = state.cart.cartItems.find((x) => x._id === product._id);
     const quantity = existItem ? existItem.quantity + 1 : 1;
-    const { data } = await axios.get(`/api/products/${product._id}`); //A product is requested to API.
-    if (data.countInStock <= quantity) {
-      window.alert("Sorry. Product is out of stock");
+    const { data } = await axios.get(`/api/products/${product._id}`);
+    if (data.countInStock < quantity) {
+      window.alert('Sorry. Product is out of stock');
       return;
     }
-    dispatch({ type: "CART_ADD_ITEM", payload: { ...product, quantity } });
-    router.push("/cart");
+    dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity } });
+    router.push('/cart');
   };
 
   return (
@@ -109,11 +108,9 @@ export default function ProductScreen(props) {
         <Grid item md={3} xs={12}>
           <List>
             <ListItem>
-              {/* Typography's default element is <p>, so this element is changed to <h1> in order to improve accesibility and SEO */}
               <Typography component="h1" variant="h1">
                 {product.name}
-              </Typography>{" "}
-              {/*variant is necessary to apply styling with MUI theme in components/Layout.js, when an default element is changed*/}
+              </Typography>
             </ListItem>
             <ListItem>
               <Typography>Category: {product.category}</Typography>
@@ -152,7 +149,7 @@ export default function ProductScreen(props) {
                   </Grid>
                   <Grid item xs={6}>
                     <Typography>
-                      {product.countInStock > 0 ? "In stock" : "Unavailable"}
+                      {product.countInStock > 0 ? 'In stock' : 'Unavailable'}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -251,8 +248,9 @@ export default function ProductScreen(props) {
 export async function getServerSideProps(context) {
   const { params } = context;
   const { slug } = params;
+
   await db.connect();
-  const product = await Product.findOne({ slug }, '-reviews').lean();; //lean: mongoose option. See doc. Transforms object instance to pojo.
+  const product = await Product.findOne({ slug }, '-reviews').lean();
   await db.disconnect();
   return {
     props: {

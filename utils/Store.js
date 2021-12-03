@@ -3,7 +3,8 @@ import { createContext, useReducer } from "react";
 
 
 export const Store = createContext();
-
+// console.log(Cookies.get("shippingAddress"))
+// console.log((JSON.parse(Cookies.get("shippingAddress"))))
 const initialState = {
   darkMode: Cookies.get("darkMode") === "ON" ? true : false,
   cart: {
@@ -11,7 +12,7 @@ const initialState = {
       ? JSON.parse(Cookies.get("cartItems"))
       : [],
     shippingAddress: Cookies.get("shippingAddress")
-      ? JSON.parse(Cookies.get("shippingAddress"))
+      ? Cookies.get("shippingAddress")
       : { location: {} },
     paymentMethod: Cookies.get("paymentMethod")
       ? Cookies.get("paymentMethod")

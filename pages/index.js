@@ -17,6 +17,7 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import { Store } from "utils/Store";
+import Rating from '@material-ui/lab/Rating';
 
 export default function Home(props) {
   const router = useRouter();
@@ -52,6 +53,7 @@ export default function Home(props) {
                     ></CardMedia>
                     <CardContent>
                       <Typography>{product.name}</Typography>
+                      <Rating value={product.rating} readOnly></Rating>
                     </CardContent>
                   </CardActionArea>
                 </NextLink>
@@ -77,7 +79,7 @@ export default function Home(props) {
 
 export async function getServerSideProps() {
   await db.connect();
-  const products = await Product.find({}).lean(); //lean: mongoose option. See doc.
+  const products = await Product.find({}, '-reviews').lean(); //lean: mongoose option. See doc.
   await db.disconnect();
   return {
     props: {

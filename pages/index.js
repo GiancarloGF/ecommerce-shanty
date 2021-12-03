@@ -1,6 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
-import NextLink from 'next/link';
-import { Grid, Link, Typography } from '@material-ui/core';
+// import NextLink from 'next/link';
+import { Grid,
+  //  Link, 
+   Typography } from '@material-ui/core';
 import Layout from "components/Layout";
 // import data from 'utils/data';
 import db from "utils/db";
@@ -10,14 +12,16 @@ import { useRouter } from "next/router";
 import { useContext } from "react";
 import { Store } from "utils/Store";
 import ProductItem from '../components/ProductItem';
-import Carousel from 'react-material-ui-carousel';
-import useStyles from '../utils/styles';
+// import Carousel from 'react-material-ui-carousel';
+// import useStyles from '../utils/styles';
 
 export default function Home(props) {
-  const classes = useStyles();
+  // const classes = useStyles();
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
-  const { topRatedProducts, featuredProducts } = props;
+  const { topRatedProducts
+    // , featuredProducts 
+  } = props;
 
   const addToCartHandler = async (product) => {
     const existItem = state.cart.cartItems.find((x) => x._id === product._id);

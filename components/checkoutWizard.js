@@ -3,6 +3,7 @@ import React from 'react';
 import useStyles from 'utils/styles';
 
 export default function Checkoutwizard({ activeStep = 0 }) {
+  console.log('activeStep', activeStep);
   const classes= useStyles();
   return (
     <Stepper 

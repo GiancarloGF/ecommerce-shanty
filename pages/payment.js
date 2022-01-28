@@ -1,5 +1,5 @@
 import Layout from "components/Layout";
-import CheckoutWizard from "components/checkoutwizard";
+import CheckoutWizard from "components/checkoutWizard";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";

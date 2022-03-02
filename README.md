@@ -1,6 +1,6 @@
 # Shanty Ecommerce - Fullstack Project
 
-View: https://shantyweb.vercel.app/
+View: https://ecommerce-shanty.vercel.app/
 
 This project is an Ecommerce website for a jewelry business, made it from Front-end to Back-end with Nextjs, and MongoDB as database and deployed on Vercel.
 
